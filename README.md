@@ -272,9 +272,8 @@ Recommended stack:
 
 ## 📚 Documentation
 
-Additional documentation:
-
-* Installation Guide → `docs/INSTALLATION.md`
+- [Installation Guide](docs/INSTALLATION.md)
+- [Filtering & Scoring Guide](docs/FILTERING-SCORING.md)
 
 ---
 
