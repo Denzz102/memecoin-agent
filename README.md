@@ -296,3 +296,15 @@ Feel free to fork, modify, and improve this project.
 
 ---
 
+## ❤️ Support the Project
+
+Enjoying Memecoin AI Agent?
+
+If this project has been helpful to you, feel free to support its development with a voluntary donation.
+
+☀️ Solana (SOL)
+
+H515J4mCY9tmAfv6uvHqUfQdHqoQCr78AaBFjgXBpnd5
+
+Thank you for your support 🚀
+
