@@ -261,13 +261,6 @@ Supported environments:
 * Ubuntu Server
 * Windows Server
 
-Recommended stack:
-
-* Ubuntu 22.04
-* PM2
-* Nginx
-* MySQL 8
-
 ---
 
 ## 📚 Documentation
