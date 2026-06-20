@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AI Memecoin Screener</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/landing.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+
+    <nav class="nav">
+      <div class="nav-logo-icon">🤖</div>
+
+      <span class="nav-logo-text"> Denzz AI <span>Agent</span> Screener </span>
+
+      <div class="nav-right">
+        <a href="#gainers" class="nav-link"> Top Gainers </a>
+
+        <a href="#features" class="nav-link"> Features </a>
+
+        <a href="#how" class="nav-link"> How It Works </a>
+
+        <a href="/dashboard" class="btn-primary"> Launch Dashboard → </a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="hero">
+      <div>
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+
+          LIVE · SOLANA SCANNER
+        </div>
+
+        <h1>
+          This is your
+
+          <span class="gradient"> AI AGENT </span>
+
+          For Screening Memecoin/SOL
+        </h1>
+
+        <p class="hero-desc">
+          AI-powered Solana memecoin screener with Smart Wallet Tracking, Whale
+          Detection, RugCheck, and real-time Telegram alerts.
+        </p>
+
+        <div class="hero-actions">
+          <a href="/dashboard" class="btn-primary"> ⚡ Launch Dashboard </a>
+
+          <a href="#features" class="btn-outline"> Learn More </a>
+        </div>
+      </div>
+
+      <!-- HERO VISUAL -->
+
+      <div class="hero-visual">
+        <div class="hero-glow"></div>
+
+        <div class="hero-card">
+          <div class="hero-card-grid"></div>
+
+          <div class="hero-card-header">
+            <div
+              style="
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #4facfe;
+                animation: blink 2s infinite;
+                flex-shrink: 0;
+              "
+            ></div>
+
+            <span class="hero-card-title"> Token Scanner — Live </span>
+          </div>
+
+          <div id="landingTokens">
+            <div
+              style="
+                padding: 40px;
+                text-align: center;
+                color: #64748b;
+                font-size: 12px;
+              "
+            >
+              Loading latest tokens...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS BAR -->
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-item-num">24/7</div>
+
+        <div class="stat-item-label">Scanner Active</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-item-num">AI</div>
+
+        <div class="stat-item-label">Groq Analysis</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-item-num">🐋</div>
+
+        <div class="stat-item-label">Whale Detection</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-item-num">🛡</div>
+
+        <div class="stat-item-label">Rug Protection</div>
+      </div>
+    </div>
+
+    <!-- TOP GAINERS -->
+
+    <section class="section" id="gainers">
+      <div class="section-label">Top Gainers</div>
+
+      <h2 class="section-title">Best Performing Tokens on the last 24H</h2>
+
+      <p class="section-sub">
+        Highest market cap growth detected by AI Memecoin Screener.
+      </p>
+
+      <div id="topGainers" class="gainers-grid">
+        <div class="gainer-card">Loading...</div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+
+    <section class="section" id="features">
+      <div class="section-label">Features</div>
+
+      <h2 class="section-title">Everything You Need To Screen Memecoins</h2>
+
+      <p class="section-sub">
+        All tools in one dashboard. No noise, just signals.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+
+          <div class="feature-title">AI Analysis</div>
+
+          <div class="feature-desc">
+            Every token is analyzed by Groq AI in real-time.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🐋</div>
+
+          <div class="feature-title">Whale Detection</div>
+
+          <div class="feature-desc">
+            Detect unusual whale wallet activity early.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💎</div>
+
+          <div class="feature-title">Smart Wallet Tracking</div>
+
+          <div class="feature-desc">Track historically profitable wallets.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🛡</div>
+
+          <div class="feature-title">RugCheck Integration</div>
+
+          <div class="feature-desc">
+            Automatically screen tokens against rug pulls.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+
+    <section class="section" id="how" style="padding-top: 0">
+      <div class="section-label">How It Works</div>
+
+      <h2 class="section-title">From Scan To Signal In Seconds</h2>
+
+      <p class="section-sub">
+        Fully automated pipeline from on-chain data to actionable alerts.
+      </p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+
+          <div class="step-title">Scan Pairs</div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">02</div>
+
+          <div class="step-title">Score & Filter</div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">03</div>
+
+          <div class="step-title">AI Signals</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+
+    <section style="padding: 0 2rem 5rem; max-width: 1100px; margin: 0 auto">
+      <div class="cta-section">
+        <div class="cta-glow"></div>
+
+        <h2>Ready To Find The Next Gem?</h2>
+
+        <p>Launch the dashboard and start scanning right now.</p>
+
+        <div class="cta-actions">
+          <a href="/dashboard" class="btn-primary"> ⚡ Open Dashboard </a>
+
+          <a href="#features" class="btn-outline"> Learn More </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>AI Memecoin Screener © 2026 · Built on Solana</footer>
+
+    <script src="/js/landing.js"></script>
+  </body>
+</html>
+

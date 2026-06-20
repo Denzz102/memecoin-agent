@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Memecoin Screener</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav class="mcs-nav">
+      <a
+        href="/"
+        style="
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+        "
+      >
+        <div class="mcs-logo-icon">🤖</div>
+
+        <span class="mcs-logo-text">
+          Denzz AI <span>Agent</span> Screener
+        </span>
+      </a>
+
+      <div class="mcs-nav-links">
+        <a href="/"> Home </a>
+
+        <a href="/dashboard"> Dashboard </a>
+
+        <a href="/health"> Health </a>
+
+        <a href="/portfolio"> Portfolio </a>
+
+        <a href="https://dexscreener.com" target="_blank"> DexScreener </a>
+      </div>
+
+      <span class="mcs-badge"> LIVE v2.0 </span>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="mcs-body">
+      <!-- STAT CARDS -->
+      <div class="ranking-grid">
+        <div class="ranking-card buy">
+          <div class="ranking-label">🏆 Top BUY</div>
+
+          <div class="ranking-token" id="topBuy">-</div>
+
+          <div class="ranking-score" id="topBuyScore">Score: -</div>
+        </div>
+
+        <div class="ranking-card score">
+          <div class="ranking-label">🔥 Highest Score</div>
+
+          <div class="ranking-token" id="highestScoreToken">-</div>
+
+          <div class="ranking-score" id="highestScore">Score: -</div>
+        </div>
+
+        <div class="ranking-card watch">
+          <div class="ranking-label">👀 Top WATCH</div>
+
+          <div class="ranking-token" id="topWatch">-</div>
+
+          <div class="ranking-score" id="topWatchScore">Score: -</div>
+        </div>
+      </div>
+      <div class="mcs-stats">
+        <div class="mcs-stat buy">
+          <div class="mcs-stat-num" id="buyCount">0</div>
+          <div class="mcs-stat-label">Buy Signal</div>
+        </div>
+        <div class="mcs-stat watch">
+          <div class="mcs-stat-num" id="watchCount">0</div>
+          <div class="mcs-stat-label">Watch List</div>
+        </div>
+        <div class="mcs-stat avoid">
+          <div class="mcs-stat-num" id="avoidCount">0</div>
+          <div class="mcs-stat-label">Avoid</div>
+        </div>
+      </div>
+
+      <!-- TABLE CARD -->
+      <div class="mcs-card">
+        <div class="mcs-grid-lines"></div>
+        <div class="mcs-card-header">
+          <div class="mcs-dot"></div>
+          <span class="mcs-card-title">Token Scanner</span>
+        </div>
+        <div style="overflow-x: auto">
+          <table class="mcs-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Liquidity</th>
+                <th>Volume</th>
+                <th>MCAP</th>
+                <th>Score</th>
+                <th>Signal</th>
+                <th>AI</th>
+              </tr>
+            </thead>
+            <tbody id="tokenTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- /mcs-body -->
+
+    <!-- AI MODAL -->
+    <div class="mcs-modal-overlay" id="aiModal">
+      <div class="mcs-modal">
+        <div class="mcs-modal-header">
+          <div>
+            <div class="mcs-modal-title" id="modalToken">AI Analysis</div>
+            <div class="mcs-modal-sub" id="modalSub">analyzing...</div>
+          </div>
+          <button class="mcs-modal-close" id="modalClose">✕</button>
+        </div>
+        <pre class="mcs-modal-body" id="aiContent"></pre>
+      </div>
+    </div>
+
+    <!-- YOUR EXISTING DASHBOARD SCRIPT -->
+    <script src="/js/dashboard.js"></script>
+
+    <!-- MODERN UI SCRIPT -->
+    <script>
+      // ── Helpers ──────────────────────────────────────────────
+      function scoreColor(s) {
+        return s >= 70 ? "#10b981" : s >= 45 ? "#fbbf24" : "#ef4444";
+      }
+
+      // Format angka: 1.500.000 → $1.5M, 250.000 → $250K, dst.
+      function formatNum(value) {
+        const num = parseFloat(value);
+        if (isNaN(num)) return value; // kalau bukan angka, kembalikan apa adanya
+        if (num >= 1_000_000_000)
+          return (
+            "$" + (num / 1_000_000_000).toFixed(2).replace(/\.?0+$/, "") + "B"
+          );
+        if (num >= 1_000_000)
+          return "$" + (num / 1_000_000).toFixed(2).replace(/\.?0+$/, "") + "M";
+        if (num >= 1_000)
+          return "$" + (num / 1_000).toFixed(2).replace(/\.?0+$/, "") + "K";
+        return "$" + num.toFixed(2);
+      }
+
+      // ── Render table rows ─────────────────────────────────────
+      // Call this function from dashboard.js with your token data array.
+      // Each token object: { name, addr, liq, vol, mcap, score, signal }
+      // signal values: 'buy' | 'watch' | 'avoid'
+      function renderTokens(tokens) {
+        const tbody = document.getElementById("tokenTable");
+        const sigLabel = { buy: "Buy", watch: "Watch", avoid: "Avoid" };
+        let buy = 0,
+          watch = 0,
+          avoid = 0;
+
+        tbody.innerHTML = tokens
+          .map((t) => {
+            if (t.signal === "buy") buy++;
+            else if (t.signal === "watch") watch++;
+            else avoid++;
+
+            const sc = scoreColor(t.score);
+
+            return `
+            <tr>
+              <td>
+                <div class="mcs-token-name">${t.name}</div>
+                <div class="mcs-token-addr">${t.addr || ""}</div>
+              </td>
+              <td class="mcs-val">${t.liq}</td>
+              <td class="mcs-val">${t.vol}</td>
+              <td class="mcs-val">${t.mcap}</td>
+              <td>
+                <div class="mcs-score">
+                  <div class="mcs-score-bar">
+                    <div class="mcs-score-fill" style="width:${t.score}%; background:${sc};"></div>
+                  </div>
+                  <span class="mcs-score-num" style="color:${sc};">${t.score}</span>
+                </div>
+              </td>
+              <td><span class="mcs-signal sig-${t.signal}">${sigLabel[t.signal]}</span></td>
+              <td>
+                <button class="mcs-ai-btn" onclick="openAIModal(${JSON.stringify(t)})">
+                  ⚡ Analyze
+                </button>
+              </td>
+            </tr>`;
+          })
+          .join("");
+
+        document.getElementById("buyCount").textContent = buy;
+        document.getElementById("watchCount").textContent = watch;
+        document.getElementById("avoidCount").textContent = avoid;
+      }
+
+      // ── AI Modal ──────────────────────────────────────────────
+      function openAIModal(token) {
+        document.getElementById("modalToken").textContent =
+          `${token.name} — AI Analysis`;
+        document.getElementById("modalSub").textContent =
+          `score: ${token.score}/100 · signal: ${token.signal.toUpperCase()}`;
+
+        const body = document.getElementById("aiContent");
+        body.textContent = "";
+        body.classList.add("typing");
+        document.getElementById("aiModal").classList.add("open");
+
+        // --- HOOK THIS TO YOUR REAL AI CALL ---
+        // Replace the mock below with your actual AI response logic.
+        // Example:
+        //   fetchAIAnalysis(token).then(text => streamText(body, text));
+        const mockText = getMockAnalysis(token.signal);
+        streamText(body, mockText);
+      }
+
+      function streamText(el, text) {
+        let i = 0;
+        const iv = setInterval(() => {
+          el.textContent += text[i] || "";
+          i++;
+          if (i >= text.length) {
+            clearInterval(iv);
+            el.classList.remove("typing");
+          }
+        }, 16);
+      }
+
+      // Mock AI responses — replace with real AI output from dashboard.js
+      function getMockAnalysis(signal) {
+        const map = {
+          buy: `✅ SIGNAL: STRONG BUY\n\nLiquidity depth is healthy with minimal slippage risk. Volume-to-MCAP ratio suggests organic activity. No suspicious wallet concentrations detected.\n\nKey factors:\n• Holder distribution: diversified (top 10 wallets < 28%)\n• LP lock: 180 days confirmed\n• Dev wallet: < 3% of supply\n• Community sentiment: bullish\n\nRisk level: MODERATE\nEntry window: Current prices favorable`,
+          watch: `⚠️ SIGNAL: WATCH\n\nToken shows mixed signals. Liquidity is adequate but volume patterns are inconsistent. Monitor for breakout or breakdown.\n\nKey factors:\n• Volume spikes: irregular pattern detected\n• Holder count: stable but growing slowly\n• LP status: unlocked — monitor closely\n• Social activity: moderate\n\nRisk level: ELEVATED\nAction: Set alerts, don't commit yet`,
+          avoid: `🚨 SIGNAL: AVOID\n\nMultiple red flags detected. High probability of rug pull or honeypot mechanics based on on-chain analysis.\n\nKey factors:\n• Wallet concentration: top 3 wallets hold 67%\n• Contract: mint function not renounced\n• LP: unlocked and thin\n• Similar contracts: 4 previous rugs\n\nRisk level: CRITICAL\nRecommendation: Do not buy under any circumstances`,
+        };
+        return map[signal] || "No analysis available.";
+      }
+
+      // Close modal
+      document.getElementById("modalClose").addEventListener("click", () => {
+        document.getElementById("aiModal").classList.remove("open");
+      });
+      document.getElementById("aiModal").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget)
+          e.currentTarget.classList.remove("open");
+      });
+
+      // Data diisi oleh dashboard.js via loadData()
+    </script>
+  </body>
+</html>
