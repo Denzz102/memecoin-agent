@@ -22,7 +22,7 @@ async function updatePortfolio() {
         milestone_sent
       FROM portfolio
       WHERE signal_type IN ('BUY', 'WATCH')
-      ORDER BY id DESC
+      ORDER BY gain_percent DESC
       LIMIT 100
     `);
 
