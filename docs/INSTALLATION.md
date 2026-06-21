@@ -106,6 +106,8 @@ https://openrouter.ai
 
 https://console.groq.com
 
+for now use Groq for API key
+
 Generate an API Key.
 
 ---
