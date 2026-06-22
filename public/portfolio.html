@@ -410,6 +410,22 @@
         margin-top: -5px;
         margin-bottom: 25px;
       }
+
+      .day-filter {
+        background: transparent;
+        border: 1px solid #00cfff;
+        color: #00cfff;
+        border-radius: 12px;
+        padding: 10px 20px;
+        transition: all 0.2s ease;
+      }
+
+      .day-filter.active {
+        background: linear-gradient(135deg, #00cfff, #0099ff);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 0 20px rgba(0, 207, 255, 0.5);
+      }
     </style>
   </head>
 
@@ -437,7 +453,21 @@
       </div>
 
       <!-- STATS -->
+      <div class="d-flex gap-2 mb-3">
+        <button class="day-filter active" onclick="filterDays(1, this)">
+          1D
+        </button>
 
+        <button class="day-filter" onclick="filterDays(3, this)">3D</button>
+
+        <button class="day-filter" onclick="filterDays(7, this)">7D</button>
+
+        <button class="day-filter" onclick="filterDays(30, this)">30D</button>
+
+        <button class="day-filter" onclick="filterDays('ALL', this)">
+          ALL
+        </button>
+      </div>
       <div class="row g-4 mb-4">
         <div class="col-md-2">
           <div class="card-box p-4">
@@ -603,8 +633,6 @@
           <div class="modal-body">
             <div id="pnlCard" class="p-4 text-center">
               <div class="pnl-logo">🤖 DENZZ AI AGENT</div>
-
-              
 
               <h2 id="pnlSymbol"></h2>
               <div id="pnlCallAge" class="pnl-call-age"></div>

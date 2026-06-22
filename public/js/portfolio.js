@@ -1,17 +1,20 @@
 let portfolioData = [];
 let activeFilter = "ALL";
+let activeDayFilter = "ALL";
 
 async function loadPortfolio() {
   const res = await fetch("/api/portfolio");
-  portfolioData = await res.json();
-  updateFilterCounts(portfolioData);
-  updateStats(portfolioData);
 
-  // render sesuai filter yang sedang aktif
-  const filtered =
-    activeFilter === "ALL"
-      ? portfolioData
-      : portfolioData.filter((row) => row.signal_type === activeFilter);
+  portfolioData = await res.json();
+
+  let filtered = filterByDays(portfolioData);
+
+  updateFilterCounts(filtered);
+
+  if (activeFilter !== "ALL") {
+    filtered = filtered.filter((row) => row.signal_type === activeFilter);
+  }
+
   renderPortfolio(filtered);
   updateStats(filtered);
 }
@@ -43,6 +46,44 @@ async function loadHallOfFame() {
       </div>
     `;
   });
+}
+
+function filterByDays(data) {
+  if (activeDayFilter === "ALL") return data;
+
+  const now = new Date();
+
+  return data.filter((row) => {
+    const created = new Date(row.created_at);
+
+    const diffDays = (now - created) / (1000 * 60 * 60 * 24);
+
+    return diffDays <= activeDayFilter;
+  });
+}
+
+function filterDays(days, btn) {
+  activeDayFilter = days;
+
+  document.querySelectorAll(".day-filter").forEach((b) => {
+    b.classList.remove("active");
+  });
+
+  btn.classList.add("active");
+
+  let dayFiltered = filterByDays(portfolioData);
+
+  // update count berdasarkan filter hari
+  updateFilterCounts(dayFiltered);
+
+  let filtered = dayFiltered;
+
+  if (activeFilter !== "ALL") {
+    filtered = filtered.filter((row) => row.signal_type === activeFilter);
+  }
+
+  renderPortfolio(filtered);
+  updateStats(filtered);
 }
 
 function updateFilterCounts(data) {
@@ -200,12 +241,15 @@ function updateStats(data) {
 }
 
 function filterPortfolio(type) {
-  activeFilter = type; // ← simpan filter aktif
+  activeFilter = type;
 
-  const filtered =
-    type === "ALL"
-      ? portfolioData
-      : portfolioData.filter((row) => row.signal_type === type);
+  let filtered = filterByDays(portfolioData);
+
+  updateFilterCounts(filtered);
+
+  if (type !== "ALL") {
+    filtered = filtered.filter((row) => row.signal_type === type);
+  }
 
   renderPortfolio(filtered);
   updateStats(filtered);
@@ -273,8 +317,9 @@ function openPNLModal(address) {
 
   document.getElementById("pnlSymbol").innerText = `$ ${token.symbol}`;
 
-  document.getElementById("pnlCallAge").innerText =
-  formatCallAge(token.created_at);
+  document.getElementById("pnlCallAge").innerText = formatCallAge(
+    token.created_at,
+  );
 
   document.getElementById("pnlEntry").innerText = formatMCAP(token.entry_mcap);
 
